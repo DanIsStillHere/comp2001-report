@@ -1,0 +1,19 @@
+1 <!-- templates/home.html -->
+2
+3 <!DOCTYPE html>
+4 <html lang="en">
+5 <head>
+6     <meta charset="UTF-8">
+7     <title>RP Flask REST API</title>
+8 </head>
+9 <body>
+10    <h1>
+11        Hello, People!
+12    </h1>
+      <ul>
+        {% for person in people %}
+        <li>{{ person.fname }} {{ person.lname }}</li>
+        {% endfor %}
+      </ul>  
+13 </body>
+14 </html>
