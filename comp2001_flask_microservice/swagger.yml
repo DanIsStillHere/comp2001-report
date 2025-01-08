@@ -1,9 +1,9 @@
-# Swagger File
+# swagger.yml
 
 openapi: 3.0.0
 info:
-  title: "RP Flask REST API"
-  description: "An API about people and trails"
+  title: "Trail Management API"
+  description: "An API for Managing Trails and their Features."
   version: "1.0.0"
 
 servers:
@@ -11,84 +11,225 @@ servers:
 
 components:
   schemas:
-    Person:
-      type: "object"
-      required:
-        - lname
+    Trail:
+      type: object
       properties:
-        fname:
-          type: "string"
-        lname:
-          type: "string"
-  parameters:
-    lname:
-      name: "lname"
-      description: "Last name of the person to get"
-      in: path
-      required: True
-      schema:
-        type: "string"
+        TrailName:
+          type: string
+        TrailSummary:
+          type: string
+        TrailDescription:
+          type: string
+        Difficulty:
+          type: string
+        Location:
+          type: string
+        Length:
+          type: number
+          format: float
+        ElevationGain:
+          type: number
+          format: float
+        RouteType:
+          type: string
+        OwnerID:
+          type: integer
+        Pt1_lat:
+          type: number
+          format: float
+        Pt1_long:
+          type: number
+          format: float
+        Pt1_desc:
+          type: string
+
+    Feature:
+      type: object
+      properties:
+        TrailFeature:
+          type: string
+
+    TrailFeatureLink:
+      type: object
+      properties:
+        TrailID:
+          type: integer
+        TrailFeatureID:
+          type: integer
+
+    User:
+      type: object
+      properties:
+        EmailAddress:
+          type: string
+        Role:
+          type: string
 
 paths:
-  /people:
+  /trails:
     get:
-      operationId: "people.read_all"
+      operationId: "endpoints.read_all_trails"
+      summary: "Get all trails"
       tags:
-        - "People"
-      summary: "Read the list of people"
+        - Trail
       responses:
         "200":
-          description: "Successfully read people list"
+          description: "List of all trails"
     post:
-      operationId: "people.create"
+      operationId: "endpoints.create_trail"
+      summary: "Create a trail"
       tags:
-        - People
-      summary: "Create a person"
+        - Trail
       requestBody:
-        description: "Person to create"
-        required: True
+        required: true
         content:
           application/json:
             schema:
-              x-body-name: "person"
-              $ref: "#/components/schemas/Person"
+              $ref: "#/components/schemas/Trail"
       responses:
         "201":
-          description: "Successfully created person"
-  /people/{lname}:
+          description: "Trail created successfully"
+
+  /trails/{trail_id}:
     get:
-      operationId: "people.read_one"
+      operationId: "endpoints.read_one_trail"
+      summary: "Get a trail by ID"
       tags:
-        - People
-      summary: "Read one person"
+        - Trail
       parameters:
-        - $ref: "#/components/parameters/lname"
+        - name: trail_id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         "200":
-          description: "Successfully read person"
+          description: "Trail details"
     put:
+      operationId: "endpoints.update_trail"
+      summary: "Update a trail"
       tags:
-        - People
-      operationId: "people.update"
-      summary: "Update a person"
+        - Trail
       parameters:
-        - $ref: "#/components/parameters/lname"
-      responses:
-        "200":
-          description: "Successfully updated person"
+        - name: trail_id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              x-body-name: "person"
-              $ref: "#/components/schemas/Person"
-    delete:
-      tags:
-        - People
-      operationId: "people.delete"
-      summary: "Delete a person"
-      parameters:
-        - $ref: "#/components/parameters/lname"
+              $ref: "#/components/schemas/Trail"
       responses:
-        "204":
-          description: "Successfully deleted person"
+        "201":
+          description: "Trail updated successfully"
+    delete:
+      operationId: "endpoints.delete_trail"
+      summary: "Delete a trail"
+      tags:
+        - Trail
+      parameters:
+        - name: trail_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Trail deleted successfully"
+
+  /features:
+    get:
+      operationId: "endpoints.read_all_features"
+      summary: "Get all features"
+      tags:
+        - Feature
+      responses:
+        "200":
+          description: "List of all features"
+    post:
+      operationId: "endpoints.create_feature"
+      summary: "Create a feature"
+      tags:
+        - Feature
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Feature"
+      responses:
+        "201":
+          description: "Feature created successfully"
+
+  /trail-features:
+    post:
+      operationId: "endpoints.create_trail_feature"
+      summary: "Link a feature to a trail"
+      tags:
+        - TrailFeature
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrailFeatureLink"
+      responses:
+        "201":
+          description: "Trail-feature relationship created successfully"
+
+  /users:
+    get:
+      operationId: "endpoints.read_all_users"
+      summary: "Get all users"
+      tags:
+        - User
+      responses:
+        "200":
+          description: "List of all users"
+    post:
+      operationId: "endpoints.create_user"
+      summary: "Create a user"
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "User created successfully"
+
+  /users/{user_id}:
+    get:
+      operationId: "endpoints.read_one_user"
+      summary: "Get a user by ID"
+      tags:
+        - User
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "User details"
+    delete:
+      operationId: "endpoints.delete_user"
+      summary: "Delete a user"
+      tags:
+        - User
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "User deleted successfully"

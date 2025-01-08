@@ -1,19 +1,87 @@
-1 <!-- templates/home.html -->
-2
-3 <!DOCTYPE html>
-4 <html lang="en">
-5 <head>
-6     <meta charset="UTF-8">
-7     <title>RP Flask REST API</title>
-8 </head>
-9 <body>
-10    <h1>
-11        Hello, People!
-12    </h1>
-      <ul>
-        {% for person in people %}
-        <li>{{ person.fname }} {{ person.lname }}</li>
-        {% endfor %}
-      </ul>  
-13 </body>
-14 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trail Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Trail Management System</h1>
+
+        <!-- Trails Section -->
+        <section class="mb-5">
+            <h2>Trails</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Trail ID</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Difficulty</th>
+                        <th>Owner ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trail in trails %}
+                    <tr>
+                        <td>{{ trail.TrailID }}</td>
+                        <td>{{ trail.TrailName }}</td>
+                        <td>{{ trail.Location }}</td>
+                        <td>{{ trail.Difficulty }}</td>
+                        <td>{{ trail.OwnerID }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Features Section -->
+        <section class="mb-5">
+            <h2>Features</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Feature ID</th>
+                        <th>Feature Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feature in features %}
+                    <tr>
+                        <td>{{ feature.TrailFeatureID }}</td>
+                        <td>{{ feature.TrailFeature }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Users Section -->
+        <section class="mb-5">
+            <h2>Users</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Email Address</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.UserID }}</td>
+                        <td>{{ user.EmailAddress }}</td>
+                        <td>{{ user.Role }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
