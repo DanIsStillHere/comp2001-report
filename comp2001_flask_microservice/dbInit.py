@@ -21,12 +21,6 @@ conn_str = (
 conn = pyodbc.connect(conn_str)
 cursor = conn.cursor()
 
-people = [
-    "'Grace', 'Hopper', '2024-11-19 16:15:10'",
-    "'Tim', 'Berners-Lee', '2024-11-19 16:15:13'",
-    "'Ada', 'Lovelace', '2024-11-19 16:15:27'",
-]
-
 cursor.execute("SELECT * FROM person")
 
 people = cursor.fetchall()
