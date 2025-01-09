@@ -60,6 +60,7 @@ class User(db.Model):
 class TrailSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Trail
+        include_fk = True
         load_instance = True
 
 class FeatureSchema(ma.SQLAlchemyAutoSchema):
@@ -70,6 +71,7 @@ class FeatureSchema(ma.SQLAlchemyAutoSchema):
 class TrailFeatureSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = TrailFeature
+        include_fk = True
         load_instance = True
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
