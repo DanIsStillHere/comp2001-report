@@ -196,21 +196,79 @@ paths:
         "201":
           description: "Feature created successfully"
 
-  /trail-features:
-    post:
-      operationId: "endpoints.create_trail_feature"
-      summary: "Link a feature to a trail"
+  /features/{feature_id}:
+    get:
+      operationId: "endpoints.read_one_feature"
+      summary: "Get a feature by ID"
       tags:
-        - TrailFeature
+        - Feature
+      parameters:
+        - name: feature_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Feature details"
+    put:
+      operationId: "endpoints.update_feature"
+      summary: "Update a feature"
+      tags:
+        - Feature
+      parameters:
+        - name: feature_id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TrailFeatureLink"
+              $ref: "#/components/schemas/Feature"
       responses:
         "201":
-          description: "Trail-feature relationship created successfully"
+          description: "Feature updated successfully"
+    delete:
+      operationId: "endpoints.delete_feature"
+      summary: "Delete a feature"
+      tags:
+        - Feature
+      parameters:
+        - name: feature_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: "Feature deleted successfully"
+
+  /trail-features:
+      post:
+        operationId: "endpoints.create_trail_feature"
+        summary: "Link a feature to a trail"
+        tags:
+          - TrailFeature
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrailFeatureLink"
+        responses:
+          "201":
+            description: "Trail-feature relationship created successfully"
+      get:
+        operationId: "endpoints.read_all_trail_features"
+        summary: "Get all trail-feature links"
+        tags:
+          - TrailFeature
+        responses:
+          "200":
+            description: "List of all trail-feature links"
 
   /users:
     get:
@@ -265,3 +323,23 @@ paths:
       responses:
         "200":
           description: "User deleted successfully"
+    put:
+      operationId: "endpoints.update_user"
+      summary: "Update a user"
+      tags:
+        - User
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "User updated successfully"

@@ -71,6 +71,36 @@ def read_all_features():
     features = Feature.query.all()
     return features_schema.dump(features)
 
+def read_one_feature(feature_id):
+    feature = Feature.query.get(feature_id)
+    if feature:
+        return feature_schema.dump(feature)
+    else:
+        abort(404, f"Feature with ID {feature_id} not found")
+
+def update_feature(feature_id):
+    feature_data = request.get_json()
+    existing_feature = Feature.query.get(feature_id)
+
+    if existing_feature:
+        update_data = feature_schema.load(feature_data, session=db.session, partial=True)
+        for key, value in feature_data.items():
+            setattr(existing_feature, key, value)
+        db.session.commit()
+        return feature_schema.dump(existing_feature), 201
+    else:
+        abort(404, f"Feature with ID {feature_id} not found")
+
+def delete_feature(feature_id):
+    existing_feature = Feature.query.get(feature_id)
+    if existing_feature:
+        db.session.delete(existing_feature)
+        db.session.commit()
+        return make_response(f"Feature ID {feature_id} successfully deleted", 200)
+    else:
+        abort(404, f"Feature with ID {feature_id} not found")
+
+
 def create_feature():
     feature = request.get_json()
     new_feature = feature_schema.load(feature, session=db.session)
@@ -99,6 +129,10 @@ def create_trail_feature():
     db.session.commit()
     return trail_feature_schema.dump(new_trail_feature), 201
 
+def read_all_trail_features():
+    trail_features = TrailFeature.query.all()
+    return trail_features_schema.dump(trail_features)
+
 # Users
 def read_all_users():
     users = User.query.all()
@@ -123,6 +157,20 @@ def read_one_user(user_id):
         return user_schema.dump(user)
     else:
         abort(404, f"User with ID {user_id} not found")
+
+def update_user(user_id):
+    user_data = request.get_json()
+    existing_user = User.query.get(user_id)
+
+    if existing_user:
+        update_data = user_schema.load(user_data, session=db.session, partial=True)
+        for key, value in user_data.items():
+            setattr(existing_user, key, value)
+        db.session.commit()
+        return user_schema.dump(existing_user), 201
+    else:
+        abort(404, f"User with ID {user_id} not found")
+
 
 def delete_user(user_id):
     existing_user = User.query.get(user_id)

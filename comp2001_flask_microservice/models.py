@@ -2,7 +2,15 @@
 
 from datetime import datetime
 import pytz
+from marshmallow_sqlalchemy import fields
 from config import db, ma
+
+# Feature Table
+class Feature(db.Model):
+    __tablename__ = "Feature"
+    __table_args__ = {"schema": "CW2"}
+    TrailFeatureID = db.Column(db.Integer, primary_key=True)
+    TrailFeature = db.Column(db.String(255), nullable=False)
 
 # Trail Table
 class Trail(db.Model):
@@ -33,13 +41,12 @@ class Trail(db.Model):
     Pt5_lat = db.Column(db.Float)
     Pt5_long = db.Column(db.Float)
     Pt5_desc = db.Column(db.String(255))
-
-# Feature Table
-class Feature(db.Model):
-    __tablename__ = "Feature"
-    __table_args__ = {"schema": "CW2"}
-    TrailFeatureID = db.Column(db.Integer, primary_key=True)
-    TrailFeature = db.Column(db.String(255), nullable=False)
+    features = db.relationship(
+        Feature,
+        secondary="CW2.TrailFeature",
+        backref=db.backref("trails", lazy="dynamic"),
+        lazy="dynamic"
+    )
 
 # TrailFeature Table (Composite Key)
 class TrailFeature(db.Model):
@@ -55,18 +62,27 @@ class User(db.Model):
     UserID = db.Column(db.Integer, primary_key=True)
     EmailAddress = db.Column(db.String(255), unique=True, nullable=False)
     Role = db.Column(db.String(50), nullable=False)
-
-# Schemas
-class TrailSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Trail
-        include_fk = True
-        load_instance = True
+    trails = db.relationship(
+        Trail,
+        backref="User",
+        cascade="all, delete, delete-orphan",
+        single_parent=True,
+        order_by="desc(Trail.TrailName)"
+    )
 
 class FeatureSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Feature
         load_instance = True
+
+# Schemas
+class TrailSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Trail
+        load_instance = True
+        sqla_session = db.session
+        include_fk = True
+    features = fields.Nested(FeatureSchema, many=True)
 
 class TrailFeatureSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -78,6 +94,9 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
         load_instance = True
+        sqla_session = db.session
+        include_relationships = True
+    trails = fields.Nested(TrailSchema, many=True)
 
 trail_schema = TrailSchema()
 trails_schema = TrailSchema(many=True)
