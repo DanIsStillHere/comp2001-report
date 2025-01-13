@@ -2,6 +2,7 @@
 
 import pathlib
 import connexion
+import pyodbc
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import urllib.parse
